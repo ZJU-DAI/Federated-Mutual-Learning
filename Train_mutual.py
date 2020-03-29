@@ -43,5 +43,5 @@ def train(node):
             pred_meme = pred_meme.argmax(dim=1)
             correct_meme += pred_meme.eq(target.view_as(pred_meme)).sum()
             acc_meme = correct_meme / len(train_loader.dataset) * 100
-    node.scheduler.step()
-    node.meme_scheduler.step()
+    # node.scheduler.step()
+    # node.meme_scheduler.step()

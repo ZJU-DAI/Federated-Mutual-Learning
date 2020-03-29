@@ -48,8 +48,9 @@ class Node(object):
 
 class Global_Node(object):
     def __init__(self, args):
-        self.device = args.device
-        self.model = init_model(args.global_model).to(self.device)
+        self.args = args
+        self.device = self.args.device
+        self.model = init_model(self.args.global_model).to(self.device)
         self.Dict = self.model.state_dict()
 
     def merge(self, Node_List):

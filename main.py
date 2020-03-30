@@ -5,6 +5,7 @@ from Node import Node, Global_Node
 from torch.utils.tensorboard import SummaryWriter
 from options import args_parser
 from Data import Data
+from utils import LR_scheduler
 
 # init args
 args = args_parser()
@@ -28,9 +29,7 @@ get_a_better = 0
 # start
 for rounds in range(args.R):
     print('==========The {:d}-th round=========='.format(rounds + 1))
-    if rounds != 0 and rounds % args.lr_step == 0:
-        args.lr = args.lr * 0.1
-    print('Learning rate={:.4f}'.format(args.lr))
+    LR_scheduler(rounds, Node_List, args)
     for i in range(len(Node_List)):
         Node_List[i].fork(global_node)
         for epoch in range(args.E):

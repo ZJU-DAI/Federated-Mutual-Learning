@@ -23,6 +23,11 @@ def init_optimizer(model, args):
     return optimizer
 
 
+# def init_scheduler(optimizer, args):
+#     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.lr_step, gamma=0.1)
+#     return scheduler
+
+
 def weights_zero(model):
     for p in model.parameters():
         if p.data is not None:
@@ -38,12 +43,15 @@ class Node(object):
         self.local_data = local_data
         self.model = init_model(self.args.local_model).to(self.device)
         self.optimizer = init_optimizer(self.model, self.args)
+        # self.scheduler = init_scheduler(self.optimizer, self.args)
         self.meme = init_model(self.args.global_model).to(self.device)
         self.meme_optimizer = init_optimizer(self.meme, self.args)
+        # self.meme_scheduler = init_scheduler(self.meme_optimizer, self.args)
 
     def fork(self, global_node):
         self.meme = copy.deepcopy(global_node.model).to(self.device)
         self.meme_optimizer = init_optimizer(self.meme, self.args)
+        # self.meme_scheduler = init_scheduler(self.meme_optimizer, self.args)
 
 
 class Global_Node(object):

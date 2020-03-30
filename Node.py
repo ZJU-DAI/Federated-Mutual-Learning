@@ -58,6 +58,7 @@ class Global_Node(object):
     def __init__(self, args):
         self.args = args
         self.device = self.args.device
+        # self.meme = init_model(self.args.global_model).to(self.device)
         self.model = init_model(self.args.global_model).to(self.device)
         self.Dict = self.model.state_dict()
 

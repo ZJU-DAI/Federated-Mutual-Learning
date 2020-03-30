@@ -16,12 +16,12 @@ def train(node):
             node.meme_optimizer.zero_grad()
             epochs.set_description(description.format(idx + 1, avg_loss, acc))
             data, target = data.to(node.device), target.to(node.device)
-            pred = node.meme(data)
-            loss = F.cross_entropy(pred, target)
+            output = node.meme(data)
+            loss = F.cross_entropy(output, target)
             loss.backward()
             node.meme_optimizer.step()
             total_loss += loss
             avg_loss = total_loss / (idx + 1)
-            pred = pred.argmax(dim=1)
+            pred = output.argmax(dim=1)
             correct += pred.eq(target.view_as(pred)).sum()
             acc = correct / len(train_loader.dataset) * 100

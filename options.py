@@ -5,8 +5,10 @@ def args_parser():
     parser = argparse.ArgumentParser()
 
     # Total
+    parser.add_argument('--algorithm', type=str, default='fed_mutual',
+                        help="Type of algorithms:{fed_mutual, fed_avg, normal}")
     parser.add_argument('--device', type=str, default='cuda:0',
-                        help="cuda ID.")
+                        help="device: {cuda, cpu}")
     parser.add_argument('--node_num', type=int, default=3,
                         help="Number of nodes")
     parser.add_argument('--R', type=int, default=30,
@@ -15,7 +17,7 @@ def args_parser():
                         help="Number of local epochs: E")
 
     # Model
-    parser.add_argument('--global_model', type=str, default='LeNet5',
+    parser.add_argument('--global_model', type=str, default='ResNet18',
                         help='Type of global model: {LeNet5, CNNCifar, ResNet18}')
     parser.add_argument('--local_model', type=str, default='ResNet18',
                         help='Type of local model: {LeNet5, CNNCifar, ResNet18}')

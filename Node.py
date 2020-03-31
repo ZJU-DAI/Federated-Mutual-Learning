@@ -38,7 +38,7 @@ def weights_zero(model):
 class Node(object):
     def __init__(self, num, local_data, args):
         self.args = args
-        self.num = num
+        self.num = num + 1
         self.device = self.args.device
         self.local_data = local_data
         self.model = init_model(self.args.local_model).to(self.device)
@@ -56,6 +56,7 @@ class Node(object):
 
 class Global_Node(object):
     def __init__(self, args):
+        self.num = 0
         self.args = args
         self.device = self.args.device
         # self.meme = init_model(self.args.global_model).to(self.device)

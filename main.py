@@ -22,7 +22,7 @@ logger = SummaryWriter('./logs')
 global_node = Global_Node(args)
 Node_List = []
 for i in range(args.node_num):
-    Node_List.append(Node(i, data.train_loader, args))
+    Node_List.append(Node(i, data.train_loader[i], args))
 
 # init variables
 recorder = Recorder(args)
@@ -38,4 +38,6 @@ for rounds in range(args.R):
             recorder.validate(Node_List[i], data.test_loader)
         recorder.printer(Node_List[i])
     global_node.merge(Node_List)
+    recorder.validate(global_node, data.test_loader)
+    recorder.printer(global_node)
 recorder.finish()

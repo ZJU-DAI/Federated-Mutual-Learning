@@ -11,15 +11,15 @@ def args_parser():
                         help="device: {cuda, cpu}")
     parser.add_argument('--node_num', type=int, default=3,
                         help="Number of nodes")
-    parser.add_argument('--R', type=int, default=30,
+    parser.add_argument('--R', type=int, default=50,
                         help="Number of rounds: R")
     parser.add_argument('--E', type=int, default=5,
                         help="Number of local epochs: E")
 
     # Model
-    parser.add_argument('--global_model', type=str, default='ResNet18',
+    parser.add_argument('--global_model', type=str, default='LeNet5',
                         help='Type of global model: {LeNet5, CNNCifar, ResNet18}')
-    parser.add_argument('--local_model', type=str, default='ResNet18',
+    parser.add_argument('--local_model', type=str, default='LeNet5',
                         help='Type of local model: {LeNet5, CNNCifar, ResNet18}')
 
     # Data
@@ -33,6 +33,8 @@ def args_parser():
                         help='learning rate')
     parser.add_argument('--lr_step', type=int, default=10,
                         help='learning rate decay step size')
+    parser.add_argument('--stop_decay', type=int, default=30,
+                        help='round when learning rate stop decay')
     parser.add_argument('--momentum', type=float, default=0.9,
                         help='SGD momentum')
 

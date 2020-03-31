@@ -2,7 +2,7 @@ import torch
 
 
 def LR_scheduler(rounds, Node_List, args):
-    if rounds != 0 and rounds % args.lr_step == 0:
+    if rounds != 0 and rounds % args.lr_step == 0 and rounds < args.stop_decay:
         args.lr = args.lr * 0.1
         for i in range(len(Node_List)):
             Node_List[i].args.lr = args.lr
@@ -14,10 +14,10 @@ def LR_scheduler(rounds, Node_List, args):
 class Recorder(object):
     def __init__(self, args):
         self.args = args
-        self.loss = torch.zeros(self.args.node_num)
-        self.acc = torch.zeros(self.args.node_num)
-        self.acc_best = torch.zeros(self.args.node_num)
-        self.get_a_better = torch.zeros(self.args.node_num)
+        self.loss = torch.zeros(self.args.node_num + 1)
+        self.acc = torch.zeros(self.args.node_num + 1)
+        self.acc_best = torch.zeros(self.args.node_num + 1)
+        self.get_a_better = torch.zeros(self.args.node_num + 1)
         # self.loss_meme = torch.zeros(args.node_num)
         # self.acc_meme = torch.zeros(args.node_num)
         # self.acc_best_meme = torch.zeros(args.node_num)
@@ -52,15 +52,15 @@ class Recorder(object):
         if self.acc[node.num] > self.acc_best[node.num]:
             self.get_a_better[node.num] = 1
             self.acc_best[node.num] = self.acc[node.num]
-            torch.save(node.model.state_dict(), "Node{:d}_{:s}.pt".format(node.num + 1, node.args.local_model))
+            torch.save(node.model.state_dict(), "Node{:d}_{:s}.pt".format(node.num, node.args.local_model))
 
     def printer(self, node):
         if self.get_a_better[node.num] == 1:
-            print("Node{:d}: A Better Accuracy: {:.2f}%! Model Saved!".format(node.num + 1, self.acc_best[node.num]))
+            print("Node{:d}: A Better Accuracy: {:.2f}%! Model Saved!".format(node.num, self.acc_best[node.num]))
             print('-------------------------')
             self.get_a_better[node.num] = 0
 
     def finish(self):
         print("Finished!\n")
-        for i in range(self.args.node_num):
-            print("Node{}: Best Accuracy = {:.2f}%".format(i + 1, self.acc_best[i]))
+        for i in range(self.args.node_num + 1):
+            print("Node{}: Best Accuracy = {:.2f}%".format(i, self.acc_best[i]))

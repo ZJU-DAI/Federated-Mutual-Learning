@@ -25,10 +25,14 @@ def train(node):
             data, target = data.to(node.device), target.to(node.device)
             output_local = node.model(data)
             output_meme = node.meme(data)
-            loss_local = 0.2 * F.kl_div(F.log_softmax(output_local, dim=1), F.softmax(output_meme.detach(), dim=1),
-                                        reduction='batchmean') + 0.8 * F.cross_entropy(output_local, target)
-            loss_meme = 0.8 * F.kl_div(F.log_softmax(output_meme, dim=1), F.softmax(output_local.detach(), dim=1),
-                                       reduction='batchmean') + 0.2 * F.cross_entropy(output_meme, target)
+            loss_local = (1 - node.args.alpha) * F.kl_div(F.log_softmax(output_local, dim=1),
+                                                          F.softmax(output_meme.detach(), dim=1),
+                                                          reduction='batchmean') + node.args.alpha * F.cross_entropy(
+                output_local, target)
+            loss_meme = (1 - node.args.beta) * F.kl_div(F.log_softmax(output_meme, dim=1),
+                                                        F.softmax(output_local.detach(), dim=1),
+                                                        reduction='batchmean') + node.args.beta * F.cross_entropy(
+                output_meme, target)
             loss_local.backward()
             loss_meme.backward()
             node.optimizer.step()

@@ -20,11 +20,14 @@ class Data(object):
             ]
         )
 
-        train_set = torchvision.datasets.CIFAR10(
-            root="~/data", train=True, download=False, transform=tra_transformer
+        train_set = torchvision.datasets.EMNIST(
+            root="~/data", split='balanced', train=True, download=True, transform=tra_transformer
         )
-        data_num = [10000 for _ in range(5)]
-
+        l = len(train_set)
+        if args.all_data:
+            data_num = [len(train_set) for _ in range(1)]
+        else:
+            data_num = [int(len(train_set) / args.split) for _ in range(args.split)]
         splited_set = torch.utils.data.random_split(train_set, data_num)
 
         self.train_loader = []
@@ -32,9 +35,9 @@ class Data(object):
             self.train_loader.append(torch.utils.data.DataLoader(
                 splited_set[i], batch_size=args.batchsize, shuffle=True, num_workers=4
             ))
-            
-        test_set = torchvision.datasets.CIFAR10(
-            root="~/data", train=False, download=False, transform=val_transformer
+
+        test_set = torchvision.datasets.EMNIST(
+            root="~/data", split='byclass', train=False, download=True, transform=val_transformer
         )
         self.test_loader = torch.utils.data.DataLoader(
             test_set, batch_size=args.batchsize, shuffle=False, num_workers=4
